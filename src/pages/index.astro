@@ -1,65 +1,110 @@
 ---
-import { Image } from '@astrojs/image/components';
-import { Icon } from 'astro-icon';
-import Layout from '../layouts/Layout.astro';
+import { Image } from '@astrojs/image/components'
+import { Icon } from 'astro-icon'
+import Layout from '../layouts/Layout.astro'
 
-let pokemonList = [];
+let pokemonList = []
+
+let loadMore = 15
 
 try {
-	const pokeName = async id => {
-		const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-		const data = await res.json();
+	const pokeName = async (id) => {
+		const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+		const data = await res.json()
 		return data
 	}
-	
-	
-	for(let index = 1; index <= 15; index++){
+
+	for (let index = 1; index <= 15; index++) {
 		let data = await pokeName(index)
 		pokemonList.push(data)
 	}
-	
 } catch (error) {
-	console.log(error);
+	console.log(error)
 }
 ---
 
-<Layout title="Astro - PokeApi Example">
-	<main class="lg:container lg:mx-auto p-4">
-        <h1 class="text-center text-6xl font-semibold tracking-wide capitalize py-4 bg-clip-text text-transparent bg-gradient-to-br from-slate-100 to-slate-800">Astro - PokeApi Example</h1>
-        <section class="flex flex-wrap justify-center items-center -mx-1 gap-4 md:gap-2 lg:gap-4">
-            { pokemonList.map((pokemon) => (
-                <div class="relative h-[35rem] w-full overflow-hidden md:w-1/3 lg:w-1/4 xl:w-1/4  bg-[#74cb48] rounded-lg p-4">
-                    <div>
-                        <div class="flex justify-between text-xl text-white capitalize font-bold">
-                            <Icon name='ic:twotone-catching-pokemon' class='absolute -top-3 -right-3 h-56 w-56 text-[#82d05a]' />
-                            <span>{pokemon.name}</span>
-                            <span class="z-10"># {pokemon.id}</span>
-                        </div>
-                        <div class="flex justify-center">
-                            <Image class='translate-y-14' src={pokemon.sprites.other.dream_world.front_default} alt={pokemon.name} height={200} width={200} fit='fill'  loading="lazy"/>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-lg h-fit pt-16">
-                        <div class="flex justify-evenly items-center">
-                            {pokemon.types.map((type) =>(<span class="rounded-full bg-slate-400 p-2 font-bold text-white capitalize w-1/3 text-center">{type.type.name}</span>))}
-                        
-                        </div>
-
-                        <h4 class="text-center text-2xl font-semibold tracking-wide capitalize py-2 bg-clip-text text-transparent bg-gradient-to-br from-slate-100 to-slate-800">Base Stats</h4>
-
-                        
-                            {pokemon.stats.map((stat) => (
-                                <div class="flex w-full items-center px-2 capitalize text-slate-800 font-bold">
-                                    <span class="w-2/3">{stat.stat.name}</span>
-                                    <span class="w-1/3">{stat.base_stat}%</span>
-                                    <progress class="w-2/3"  max="100" value={stat.base_stat}> {stat.base_stat}% </progress>
-                                </div>
-                            ) )}
-                        
-                    </div>
-                </div>            
-                ))
-		    }
-        </section>
+<Layout title='Astro - PokeApi Example'>
+	<main class='lg:container lg:mx-auto p-4'>
+		<h1
+			class='text-center text-6xl font-semibold tracking-wide capitalize py-4 bg-clip-text text-transparent bg-gradient-to-br from-slate-100 to-slate-800'>
+			Astro - PokeApi Example
+		</h1>
+		<section class='flex flex-wrap justify-center items-center -mx-1 gap-4 md:gap-2 lg:gap-4'>
+			{
+				pokemonList.map((pokemon) => (
+					<div
+						class={`relative h-[33rem] w-full overflow-hidden md:w-1/3 lg:w-1/4 xl:w-1/4 rounded-lg p-4 ${pokemon.types[0].type.name}`}>
+						<div>
+							<div
+								class={`flex justify-between text-xl text-${pokemon.types[0].type.name} capitalize font-bold`}>
+								<Icon
+									name='ic:twotone-catching-pokemon'
+									class='absolute -top-3 -right-3 h-56 w-56'
+								/>
+								<span>{pokemon.name}</span>
+								<span class='z-10'># {pokemon.id}</span>
+							</div>
+							<div class='flex justify-center'>
+								<Image
+									class='translate-y-10'
+									src={pokemon.sprites.other.dream_world.front_default}
+									alt={pokemon.name}
+									height={175}
+									width={175}
+									fit='fill'
+									loading='lazy'
+								/>
+							</div>
+						</div>
+						<div class='bg-white rounded-lg h-fit pt-16'>
+							<div class='flex justify-evenly items-center'>
+								{pokemon.types.map((type) => (
+									<span
+										class={`rounded-full border-solid border-${pokemon.types[0].type.name} p-2 font-bold capitalize w-1/3 text-center text-${pokemon.types[0].type.name} bg-${pokemon.types[0].type.name}`}>
+										{type.type.name}
+									</span>
+								))}
+							</div>
+							<p class={`text-${pokemon.types[0].type.name} bg-grass`}>hola</p>
+							<h4 class='text-center text-2xl font-semibold tracking-wide capitalize py-2 bg-clip-text text-transparent bg-gradient-to-br from-slate-100 to-slate-800'>
+								Base Stats
+							</h4>
+							{pokemon.stats.map((stat) => (
+								<div class='flex w-full items-center md:text-sm px-2 capitalize text-slate-800 font-bold'>
+									<span class='w-2/3'>{stat.stat.name}</span>
+									<span class='w-1/3'>{stat.base_stat}%</span>
+									<progress class='w-2/3' max='100' value={stat.base_stat}>
+										{' '}
+										{stat.base_stat}%{' '}
+									</progress>
+								</div>
+							))}
+						</div>
+					</div>
+				))
+			}
+		</section>
+		<section>
+			<button>Load More</button>
+		</section>
 	</main>
 </Layout>
+
+<style>
+	.bug {
+		background-color: #ffff99;
+	}
+
+	.water {
+		background-color: #43ccff;
+	}
+	.grass {
+		background-color: #00ca91;
+	}
+	.fire {
+		background-color: #e95c4d;
+	}
+	.normal {
+		background-color: #a5a5a5;
+	}
+</style>
