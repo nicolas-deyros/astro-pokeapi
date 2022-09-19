@@ -60,17 +60,16 @@ try {
 							<div class='flex justify-evenly items-center'>
 								{pokemon.types.map((type) => (
 									<span
-										class={`rounded-full border-solid border-${pokemon.types[0].type.name} p-2 font-bold capitalize w-1/3 text-center text-${pokemon.types[0].type.name} bg-${pokemon.types[0].type.name}`}>
+										class={`rounded-full border-solid p-2 font-bold capitalize w-1/3 text-center bg-${pokemon.types[0].type.name}`}>
 										{type.type.name}
 									</span>
 								))}
 							</div>
-							<p class={`text-${pokemon.types[0].type.name} bg-grass`}>hola</p>
-							<h4 class='text-center text-2xl font-semibold tracking-wide capitalize py-2 bg-clip-text text-transparent bg-gradient-to-br from-slate-100 to-slate-800'>
+							<h4 class='text-center text-2xl font-semibold tracking-wide capitalize py-2'>
 								Base Stats
 							</h4>
 							{pokemon.stats.map((stat) => (
-								<div class='flex w-full items-center md:text-sm px-2 capitalize text-slate-800 font-bold'>
+								<div class='flex w-full items-center md:text-sm px-2 capitalize font-bold'>
 									<span class='w-2/3'>{stat.stat.name}</span>
 									<span class='w-1/3'>{stat.base_stat}%</span>
 									<progress class='w-2/3' max='100' value={stat.base_stat}>
@@ -93,18 +92,40 @@ try {
 <style>
 	.bug {
 		background-color: #ffff99;
+		color: #b3b36b;
 	}
-
+	progress:has(.bug) {
+		background-color: #b3b36b;
+	}
+	.bug:has(Svg) {
+		border: 5px solid #b3b36b;
+	}
 	.water {
 		background-color: #43ccff;
+		color: #2f9eb3;
+	}
+	.water:has(Svg) {
+		border: 5px solid #2f9eb3;
 	}
 	.grass {
 		background-color: #00ca91;
+		color: #008d77;
+	}
+	.grass:has(Svg) {
+		border: 5px solid #008d77;
 	}
 	.fire {
 		background-color: #e95c4d;
+		color: #a33e36;
+	}
+	.fire:has(Svg) {
+		border: 5px solid #a33e36;
 	}
 	.normal {
 		background-color: #a5a5a5;
+		color: #747474;
+	}
+	.normal:has(Svg) {
+		border: 5px solid #747474;
 	}
 </style>
