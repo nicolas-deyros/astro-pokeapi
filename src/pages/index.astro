@@ -2,10 +2,9 @@
 import { Image } from '@astrojs/image/components'
 import { Icon } from 'astro-icon'
 import Layout from '../layouts/Layout.astro'
+import LoadMoreBtn from '../components/loadMoreBtn.jsx';
 
 let pokemonList = []
-
-let loadMore = 15
 
 try {
 	const pokeName = async (id) => {
@@ -24,22 +23,22 @@ try {
 ---
 
 <Layout title='Astro - PokeApi Example'>
-	<main class='lg:container lg:mx-auto p-4'>
+	<main class='xl:container xl:mx-auto p-4'>
 		<h1
 			class='text-center text-6xl font-semibold tracking-wide capitalize py-4 bg-clip-text text-transparent bg-gradient-to-br from-slate-100 to-slate-800'>
 			Astro - PokeApi Example
 		</h1>
-		<section class='flex flex-wrap justify-center items-center -mx-1 gap-4 md:gap-2 lg:gap-4'>
+		<section class='flex flex-wrap justify-center items-center md:grow -mx-1 gap-4 md:gap-2 lg:gap-4'>
 			{
 				pokemonList.map((pokemon) => (
 					<div
-						class={`relative h-[33rem] w-full overflow-hidden md:w-1/3 lg:w-1/4 xl:w-1/4 rounded-lg p-4 ${pokemon.types[0].type.name}`}>
+						class={`relative h-[33rem] w-full overflow-hidden md:w-1/3 md:grow lg:grow-0 xl:w-1/4 rounded-lg p-4 ${pokemon.types[0].type.name}`}>
 						<div>
 							<div
-								class={`flex justify-between text-xl text-${pokemon.types[0].type.name} capitalize font-bold`}>
+								class='flex justify-between text-xl capitalize font-bold'>
 								<Icon
 									name='ic:twotone-catching-pokemon'
-									class='absolute -top-3 -right-3 h-56 w-56'
+									class='absolute -top-3 -right-3 h-56 w-56 opacity-25'
 								/>
 								<span>{pokemon.name}</span>
 								<span class='z-10'># {pokemon.id}</span>
@@ -56,11 +55,11 @@ try {
 								/>
 							</div>
 						</div>
-						<div class='bg-white rounded-lg h-fit pt-16'>
+						<div class='bg-white rounded-lg h-fit py-12'>
 							<div class='flex justify-evenly items-center'>
 								{pokemon.types.map((type) => (
 									<span
-										class={`rounded-full border-solid p-2 font-bold capitalize w-1/3 text-center bg-${pokemon.types[0].type.name}`}>
+										class={`rounded-full border-solid p-2 font-bold capitalize w-1/3 text-center ${pokemon.types[0].type.name}`}>
 										{type.type.name}
 									</span>
 								))}
@@ -69,10 +68,10 @@ try {
 								Base Stats
 							</h4>
 							{pokemon.stats.map((stat) => (
-								<div class='flex w-full items-center md:text-sm px-2 capitalize font-bold'>
+								<div class='flex w-full items-center md:text-xs px-2 uppercase font-bold'>
 									<span class='w-2/3'>{stat.stat.name}</span>
 									<span class='w-1/3'>{stat.base_stat}%</span>
-									<progress class='w-2/3' max='100' value={stat.base_stat}>
+									<progress class='w-2/3 appearance-none border-none rounded-full' max='100' value={stat.base_stat} data-label={`${stat.base_stat}%`}>
 										{' '}
 										{stat.base_stat}%{' '}
 									</progress>
@@ -83,49 +82,123 @@ try {
 				))
 			}
 		</section>
-		<section>
-			<button>Load More</button>
-		</section>
+		<LoadMoreBtn client:load />
 	</main>
 </Layout>
 
 <style>
-	.bug {
-		background-color: #ffff99;
-		color: #b3b36b;
+	:root {
+		--bug-bg: #ffff99;
+		--bug-text: #b3b36b;
+		--water-bg: #43ccff;
+		--water-text: #2f9eb3;
+		--grass-bg: #00ca91;
+		--grass-text: #008d77;
+		--fire-bg: #e95c4d;
+		--fire-text: #a33e36;
+		--normal-bg: #a5a5a5;
+		--normal-text: #747474;
 	}
-	progress:has(.bug) {
-		background-color: #b3b36b;
+
+	progress {
+		position: relative;
+	}
+
+	progress:before {
+		content: attr(data-label);
+		font-size: 0.8em;
+		vertical-align: 0;
+		color: white;
+		position:absolute;
+		left:5px;
+		top: -2px;
+	}
+	
+	progress[value] {
+		appearance: none;
+		border: none;
+		background-color: transparent;
+		border-radius: 8px;
+		overflow: hidden;
+	}
+
+	progress[value]::-webkit-progress-bar {
+		border-radius: 8px;
+		border: 0;
+	}
+
+	.bug {
+		background-color: var(--bug-bg);
+		color: var(--bug-text);
 	}
 	.bug:has(Svg) {
-		border: 5px solid #b3b36b;
+		border: 5px solid var(--bug-text);
 	}
+	.bug progress[value]::-webkit-progress-value {
+		background-color: var(--bug-text);
+		border: 0;
+	}
+	.bug progress[value]::-webkit-progress-bar {
+		background-color: var(--bug-bg);
+	}
+
 	.water {
-		background-color: #43ccff;
-		color: #2f9eb3;
+		background-color: var(--water-bg);
+		color: var(--water-text);
 	}
 	.water:has(Svg) {
-		border: 5px solid #2f9eb3;
+		border: 5px solid var(--water-text);
 	}
+	.water progress[value]::-webkit-progress-value {
+		background-color: var(--water-text);
+		border: 0;
+	}
+	.water progress[value]::-webkit-progress-bar {
+		background-color: var(--water-bg);
+	}
+
 	.grass {
-		background-color: #00ca91;
-		color: #008d77;
+		background-color: var(--grass-bg);
+		color: var(--grass-text);
 	}
 	.grass:has(Svg) {
-		border: 5px solid #008d77;
+		border: 5px solid var(--grass-text);
 	}
+	.grass progress[value]::-webkit-progress-value {
+		background-color: var(--grass-text);
+		border: 0;
+	}
+	.grass progress[value]::-webkit-progress-bar {
+		background-color: var(--grass-bg);
+	}
+
 	.fire {
-		background-color: #e95c4d;
-		color: #a33e36;
+		background-color: var(--fire-bg);
+		color: var(--fire-text);
 	}
 	.fire:has(Svg) {
-		border: 5px solid #a33e36;
+		border: 5px solid var(--fire-text);
 	}
+	.fire progress[value]::-webkit-progress-value {
+		background-color: var(--fire-text);
+		border: 0;
+	}
+	.fire progress[value]::-webkit-progress-bar {
+		background-color: var(--fire-bg);
+	}
+
 	.normal {
-		background-color: #a5a5a5;
-		color: #747474;
+		background-color: var(--normal-bg);
+		color: var(--text-bg);
 	}
 	.normal:has(Svg) {
-		border: 5px solid #747474;
+		border: 5px solid var(--text-bg);
+	}
+	.normal progress[value]::-webkit-progress-value {
+		background-color: var(--text-bg);
+		border: 0;
+	}
+	.normal progress[value]::-webkit-progress-bar {
+		background-color: var(--normal-bg);
 	}
 </style>
