@@ -1,3 +1,3 @@
 # PokeDex build with [Astro](https://astro.build)
 
-[See live version in](astro-pokeapi.vercel.app)
+[See live version](astro-pokeapi.vercel.app)
