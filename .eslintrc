@@ -1,0 +1,49 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "airbnb-base",
+    "plugin:astro/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "overrides": [
+    {
+      "files": ["*.astro"],
+      "plugins": ["plugin:astro/recommended", "astro/jsx-a11y-recommended", "prettier"],
+      "parser": "astro-eslint-parser",
+      "parserOptions": {
+        "parser": "@typescript-eslint/parser",
+        "extraFileExtensions": [".astro"]
+      },
+      "rules": {
+        "semi": "off",
+        "astro/semi": "off",
+        "prettier/prettier": [
+            "warn",
+            {
+                "trailingComma": "all",
+                "useTabs": true,
+                "tabWidth": 2,
+                "semi": false,
+                "singleQuote": true,
+                "bracketSpacing": true,
+                "bracketSameLine": true,
+                "arrowParens": "avoid",
+                "endOfLine":"auto"
+            }
+        ]
+      }
+    }
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-tabs": "off",
+    "no-console":["warn", { "allow": ["warn"] }]
+  }
+}

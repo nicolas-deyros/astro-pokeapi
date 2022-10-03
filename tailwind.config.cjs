@@ -31,15 +31,7 @@ module.exports = {
 				'monospace',
 			],
 		},
-		extend: {
-			colors: {
-				bug: '#aedf78',
-				water: '#43ccff',
-				grass: '#00ca91',
-				fire: '#e95c4d',
-				normal: '#a5a5a5',
-			},
-		},
+		extend: {},
 	},
 	plugins: [],
 }

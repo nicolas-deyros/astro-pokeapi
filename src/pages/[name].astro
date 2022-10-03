@@ -3,70 +3,94 @@ import { Image } from '@astrojs/image/components'
 import { Icon } from 'astro-icon'
 import { SEO } from 'astro-seo'
 import Layout from '@layouts/Layout.astro'
-import type {RootObject} from '@types/pokemon.js'
-const { name } = Astro.params;
+import type { RootObject } from '@types/pokemon'
+const { name } = Astro.params
 
-let pokemon:RootObject = []
-
-
+let pokemon: RootObject = []
 
 try {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`).then((res) => res.json());
-  pokemon = response;
+	const response = await fetch(
+		`https://pokeapi.co/api/v2/pokemon/${name}`,
+	).then(res => res.json())
+	pokemon = response
 } catch (error) {
 	console.log(error)
 }
-
 ---
-<SEO title={`Pokemon ${pokemon.name.charAt(0).toUpperCase()}${pokemon.name.slice(1)}`} description={`Pokemon type ${pokemon.types[0].type.name}`} />
+
+<SEO
+	title={`Pokemon ${pokemon.name.charAt(0).toUpperCase()}${pokemon.name.slice(
+		1,
+	)}`}
+	description={`Pokemon type ${pokemon.types[0].type.name}`}
+/>
 <Layout>
-	<main class='h-screen xl:container xl:mx-auto p-2'>
-		<h1
-			class='text-center text-6xl font-semibold tracking-wide capitalize py-4 bg-clip-text text-transparent bg-gradient-to-br from-slate-100 to-slate-800'>
-			{pokemon.name}
-		</h1>
-			<div
-						class={`relative flex h-5/6 w-full overflow-hidden rounded-lg p-4 ${pokemon.types[0].type.name}`}>
-						<div>
-							<div
-								class='flex  justify-between text-xl capitalize font-bold'>
-								<Icon
-									name='ic:twotone-catching-pokemon'
-									class='absolute z-0 opacity-25'
-								/>
-								<span>{pokemon.name}</span>
-								<span class='z-10'># {pokemon.id}</span>
-							</div>
-							<div class='flex basis-1/2 justify-center items-center'>
-								<Image height={'h-full'} aspectRatio="1:1" src={pokemon.sprites.other.dream_world.front_default}
-									alt={pokemon.name}  fit='fill'
-									loading='lazy' />
-							</div>
-						</div>
-						<div class='flex basis-1/2 flex-col justify-center items-center h-5/6 bg-white rounded-lg z-10'>
-							<div class='flex justify-evenly items-center'>
-								{pokemon.types.map((type) => (
-									<span
-										class={`rounded-full border-solid p-2 font-bold capitalize w-1/3 text-center ${pokemon.types[0].type.name}`}>
-										{type.type.name}
-									</span>
-								))}
-							</div>
-							<h4 class='text-center text-2xl font-semibold tracking-wide capitalize py-2'>
-								Base Stats
-							</h4>
-							{pokemon.stats.map((stat) => (
-								<div class='flex w-full items-center md:text-xs px-2 uppercase font-bold'>
-									<span class='w-2/3'>{stat.stat.name}</span>
-									<span class='w-1/3'>{stat.base_stat}%</span>
-									<progress class='w-2/3 appearance-none border-none rounded-full' max='100' value={stat.base_stat} data-label={`${stat.base_stat}%`}>
+	<main class="h-screen xl:container xl:mx-auto p-2">
+		<div
+			class={`relative lg:mt-8 flex flex-col gap-12 h-4/6 w-full overflow-hidden rounded-lg p-4 ${pokemon.types[0].type.name}`}>
+			<div class="flex justify-center gap-11 text-8xl capitalize font-bold">
+				<Icon
+					name="ic:twotone-catching-pokemon"
+					class="absolute z-0 opacity-25"
+				/>
+				<span>{pokemon.name}</span>
+				<span class="z-10"># {pokemon.id}</span>
+			</div>
+			<div class="flex w-full h-full gap-5">
+				<div class="flex w-2/6 h-full">
+					<Image
+						height={'h-3/6'}
+						width={'w-3/6'}
+						src={pokemon.sprites.other.dream_world.front_default}
+						alt={pokemon.name}
+						fit="fill"
+						loading="lazy"
+					/>
+				</div>
+				<div
+					class="flex w-4/6 flex-col justify-center items-center h-5/6 bg-white rounded-lg z-10 opacity-80">
+					<div class="flex justify-evenly items-center gap-3">
+						{
+							pokemon.types.map(type => (
+								<span
+									class={`rounded-full border-solid p-2 px-5 font-bold capitalize w-full text-center ${pokemon.types[0].type.name}`}>
+									{type.type.name}
+								</span>
+							))
+						}
+					</div>
+					<h4
+						class="text-center text-2xl font-semibold tracking-wide capitalize py-2">
+						Base Stats
+					</h4>
+					<div class="w-4/6">
+						{
+							pokemon.stats.map(stat => (
+								<div class="flex w-full items-center md:text-xs px-2 uppercase font-bold">
+									<span class="w-2/3">{stat.stat.name}</span>
+									<span class="w-1/3">{stat.base_stat}%</span>
+									<progress
+										class="w-2/3 appearance-none border-none rounded-full"
+										max="100"
+										value={stat.base_stat}
+										data-label={`${stat.base_stat}%`}>
 										{' '}
 										{stat.base_stat}%{' '}
 									</progress>
 								</div>
-							))}
-						</div>
+							))
+						}
 					</div>
-		
+				</div>
+			</div>
+		</div>
+		<div class="w-full flex justify-center items-center">
+			<a href="/" rel="prefetch">
+				<button
+					class={`mt-2 rounded p-3 border-2 font-semibold ${pokemon.types[0].type.name} hover:text-slate-300`}>
+					Back to Pokemon List</button
+				>
+			</a>
+		</div>
 	</main>
 </Layout>
